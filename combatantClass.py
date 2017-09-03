@@ -6,9 +6,9 @@ Created on Sun Sep  3 11:35:44 2017
 from  scipy import *
 from  pylab import *
 
-class combatant():
+class Combatant():
     # Attack = [AttackBounus, Reach, DamageDice, NbrDice, DamageBonus]
-    def __init__(self, HP, AC, Attack , NbrDice = 1, AbilityScores = array(repeat(10,6)), Name = "Default"):
+    def __init__(self, HP, AC, Attack , AbilityScores = array(repeat(10,6)), Name = "Default", Team = 0):
         self.HP = HP
         self.AC = AC
         self.AttackBonus = Attack[0]
@@ -18,12 +18,13 @@ class combatant():
         self.DamageBonus = Attack[4]
         self.AbilityScores = array(AbilityScores)
         self.Name = Name
+        self.Team = Team
         
     def Attack(self, Target):
         d20 = dice(20)
         
         toHit = d20.roll() + self.AttackBonus        
-        damage = sum(self.DamageDice.roll(NbrDice)) + self.DamageBonus 
+        damage = sum(self.DamageDice.roll(self.NbrDice)) + self.DamageBonus 
         
         (hit, damageDealt) = Target.Hit(toHit, damage)
         
@@ -34,9 +35,21 @@ class combatant():
         
     def Hit(self, toHit, damage):
         if toHit < self.AC:
-            return (false, 0)
+            return (False, 0)
         else:
-            return (true, damage)
+            self.HP = self.HP - damage
+            if self.HP < 0:
+                self.HP = 0
+                
+            return (True, damage)
+            
+    def Behaviour(self, Combat):
+        for c in Combat.Combatants:
+            if c.Team != self.Team and c.HP > 0:
+                self.Attack(c)
+                return True
+                
+        return False
             
     
                 
