@@ -8,9 +8,9 @@ from  pylab import *
 
 class dice():
     def __init__(self, sides = 6):
-        self.sides = 6
+        self.sides = sides
         
     def roll(self, number = 1):
-        return floor(rand(1) * self.sides + 1)
+        return floor(rand(1,number) * self.sides + 1)
         
         
