@@ -7,10 +7,12 @@ from  scipy import *
 from  pylab import *
 
 class Combat():
-    def __init__(self, Combatants):
+    def __init__(self, Combatants, BattleMap):
         self.Combatants = Combatants
+        self.BattleMap = BattleMap
         
         self.Initiative()
+        self.Position()
         
     def Initiative(self):
         d20 = dice(20)        
@@ -27,6 +29,11 @@ class Combat():
         if ci:
             ci, self.Combatants = zip(*sorted(zip(ci, self.Combatants), reverse=True, key = getKey))
     
+    def Position(self):
+        for c in self.Combatants:
+            self.BattleMap.put(c.Position, c.Team)
+            print(c.Team)
+    
     def run(self):
         fight = True
 
@@ -36,6 +43,9 @@ class Combat():
             print("Turn:",counter)
             for c in self.Combatants:
                 fight = c.Behaviour(self)
+                
+                if not fight:
+                    break
                 
             counter = counter + 1
             
