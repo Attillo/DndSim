@@ -40,9 +40,10 @@ class Combat():
         counter = 1        
         
         while fight:
-            print("Turn:",counter)
+            print("###Turn:",counter)
             for c in self.Combatants:
-                fight = c.Behaviour(self)
+                fight = c.Continue(self)
+                c.Behaviour(self)
                 
                 if not fight:
                     break
